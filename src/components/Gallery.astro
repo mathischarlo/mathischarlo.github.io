@@ -1,0 +1,28 @@
+---
+/** Figure gallery for a project page, with an accessible lightbox (see Lightbox.astro). */
+import type { ImageMetadata } from 'astro';
+import Figure from './Figure.astro';
+import Lightbox from './Lightbox.astro';
+
+interface Props {
+  items: { src: ImageMetadata; alt: string; caption: string }[];
+  startAt?: number;
+}
+const { items, startAt = 1 } = Astro.props;
+---
+
+<div class="gallery" data-gallery>
+  {
+    items.map((item, i) => (
+      <Figure
+        src={item.src}
+        alt={item.alt}
+        caption={item.caption}
+        number={startAt + i}
+        zoom
+        class={item.src.width / item.src.height > 2.1 ? 'figure--wide' : ''}
+      />
+    ))
+  }
+</div>
+<Lightbox />

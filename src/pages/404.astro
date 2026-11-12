@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { url } from '../lib/url';
+---
+
+<BaseLayout title="Page not found | Mathis Charlo" description="This page does not exist." noindex>
+  <section class="container not-found" aria-labelledby="nf-title">
+    <p class="not-found__code" aria-hidden="true">404</p>
+    <h1 id="nf-title">This page did not converge.</h1>
+    <p class="muted">The address may be mistyped, or the page has moved.</p>
+    <div class="hero__actions">
+      <a class="btn btn--primary" href={url('')}>Back to home</a>
+      <a class="btn btn--ghost" href={url('#projects')}>See all projects</a>
+    </div>
+  </section>
+</BaseLayout>

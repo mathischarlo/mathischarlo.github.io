@@ -1,0 +1,151 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { getImage, Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StatCard from '../../components/StatCard.astro';
+import Tag from '../../components/Tag.astro';
+import Badge from '../../components/Badge.astro';
+import Gallery from '../../components/Gallery.astro';
+import BarChart from '../../components/BarChart.astro';
+import { url } from '../../lib/url';
+
+export async function getStaticPaths() {
+  const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+  return projects.map((project, i) => ({
+    params: { slug: project.data.slug },
+    props: { project, prev: projects[i - 1], next: projects[i + 1] },
+  }));
+}
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  prev?: CollectionEntry<'projects'>;
+  next?: CollectionEntry<'projects'>;
+}
+
+const { project, prev, next } = Astro.props;
+const { Content } = await render(project);
+const d = project.data;
+
+// Per-project Open Graph image derived from the cover (SVG covers fall back to the site image).
+const og =
+  d.cover.format === 'svg' ? undefined : (await getImage({ src: d.cover, width: 1200, height: 630, fit: 'contain', background: '#ffffff', format: 'jpg' })).src;
+---
+
+<BaseLayout title={`${d.title} | Mathis Charlo`} description={d.summary} ogImage={og} ogType="article">
+  <article>
+    <header class="project-hero">
+      <div class="container">
+        <a class="back-link" href={url('#projects')}>
+          <span aria-hidden="true">←</span> All projects
+        </a>
+        <p class="project-hero__kicker mono">
+          <span>{d.category}</span>
+          {d.status === 'ongoing' && <Badge kind="ongoing" />}
+          {d.confidential && <Badge kind="confidential" />}
+        </p>
+        <h1>{d.title}</h1>
+        <p class="project-hero__context">
+          {d.context && <span>{d.context}</span>}
+          <span>{d.team}</span>
+          <span>{d.period}</span>
+        </p>
+        <ul class="tag-list" aria-label="Tools and methods">
+          {
+            d.tools.map((t) => (
+              <li>
+                <Tag label={t} />
+              </li>
+            ))
+          }
+        </ul>
+        {d.logo && <Image class="project-hero__logo" src={d.logo} alt={d.logoAlt ?? ''} height={80} />}
+      </div>
+    </header>
+
+    {
+      d.stats.length > 0 && (
+        <section class="glance container" aria-labelledby="glance-title">
+          <h2 class="glance__title" id="glance-title">
+            At a glance
+          </h2>
+          <ul class="stat-grid stat-grid--compact">
+            {d.stats.map((s) => (
+              <li>
+                <StatCard value={s.value} label={s.label} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <div class="container project-body">
+      <aside class="facts" aria-labelledby="facts-title">
+        <h2 id="facts-title">Project facts</h2>
+        <dl>
+          <div>
+            <dt>Category</dt>
+            <dd>{d.category}</dd>
+          </div>
+          <div>
+            <dt>Team</dt>
+            <dd>{d.team}</dd>
+          </div>
+          <div>
+            <dt>Period</dt>
+            <dd>{d.period}</dd>
+          </div>
+          <div>
+            <dt>Status</dt>
+            <dd>{d.status === 'ongoing' ? 'Ongoing' : 'Completed'}</dd>
+          </div>
+        </dl>
+      </aside>
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+
+    {
+      d.charts.length > 0 && (
+        <section class="container project-section" aria-labelledby="data-title">
+          <h2 id="data-title">Key data</h2>
+          <div class="chart-list">
+            {d.charts.map((c, i) => (
+              <BarChart {...c} number={i + 1} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    {
+      d.gallery.length > 0 && (
+        <section class="container project-section" aria-labelledby="figures-title">
+          <h2 id="figures-title">Figures</h2>
+          <Gallery items={d.gallery} startAt={d.charts.length + 1} />
+        </section>
+      )
+    }
+  </article>
+
+  <nav class="container pager" aria-label="More projects">
+    {
+      prev && (
+        <a class="pager__prev" href={url(`projects/${prev.data.slug}/`)} rel="prev">
+          <span class="pager__dir">← Previous project</span>
+          <span class="pager__title">{prev.data.title}</span>
+        </a>
+      )
+    }
+    {
+      next && (
+        <a class="pager__next" href={url(`projects/${next.data.slug}/`)} rel="next">
+          <span class="pager__dir">Next project →</span>
+          <span class="pager__title">{next.data.title}</span>
+        </a>
+      )
+    }
+  </nav>
+</BaseLayout>

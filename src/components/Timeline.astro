@@ -1,0 +1,28 @@
+---
+/** Vertical timeline: date (mono) / title / place / one line of detail. */
+interface Item {
+  date: string;
+  title: string;
+  place: string;
+  detail?: string;
+}
+interface Props {
+  items: Item[];
+}
+const { items } = Astro.props;
+---
+
+<ol class="timeline">
+  {
+    items.map((item) => (
+      <li class="timeline__item reveal">
+        <p class="timeline__date mono">{item.date}</p>
+        <div class="timeline__content">
+          <h3 class="timeline__title">{item.title}</h3>
+          <p class="timeline__place">{item.place}</p>
+          {item.detail && <p class="timeline__detail">{item.detail}</p>}
+        </div>
+      </li>
+    ))
+  }
+</ol>

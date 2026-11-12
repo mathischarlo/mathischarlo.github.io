@@ -1,0 +1,16 @@
+---
+/** Section title with a monospace index label ("01 / Projects"), report style. */
+interface Props {
+  id: string;
+  index: string;
+  title: string;
+  intro?: string;
+}
+const { id, index, title, intro } = Astro.props;
+---
+
+<header class="section-heading">
+  <p class="section-heading__index mono" aria-hidden="true">{index}</p>
+  <h2 id={id}>{title}</h2>
+  {intro && <p class="section-heading__intro">{intro}</p>}
+</header>

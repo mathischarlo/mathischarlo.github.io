@@ -1,0 +1,14 @@
+---
+/** Key figure: large orange monospace value with a short legend. */
+interface Props {
+  value: string;
+  label: string;
+}
+const { value, label } = Astro.props;
+---
+
+<!-- --chars lets the CSS shrink long values to fit narrow cards on one line -->
+<div class="stat" style={`--chars:${Math.max(value.length, 6)}`}>
+  <p class="stat__value">{value}</p>
+  <p class="stat__label">{label}</p>
+</div>

@@ -1,0 +1,9 @@
+---
+/** Small monospace label for a tool or method. */
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+---
+
+<span class="tag">{label}</span>

@@ -1,0 +1,10 @@
+---
+/** Status badge: "Ongoing" or "Details confidential". */
+interface Props {
+  kind: 'ongoing' | 'confidential';
+}
+const { kind } = Astro.props;
+const label = kind === 'ongoing' ? 'Ongoing' : 'Details confidential';
+---
+
+<span class={`badge badge--${kind}`}>{label}</span>

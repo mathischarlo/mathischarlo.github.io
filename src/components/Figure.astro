@@ -1,0 +1,65 @@
+---
+/**
+ * Report-style figure: white rounded frame, image shown in full (object-fit: contain,
+ * never cropped so colour scales stay intact), italic caption.
+ * With `zoom`, the image links to a large version that the lightbox opens; without JS the
+ * link simply opens the image.
+ */
+import type { ImageMetadata } from 'astro';
+import { Image, getImage } from 'astro:assets';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  caption: string;
+  number?: number;
+  zoom?: boolean;
+  eager?: boolean;
+  widths?: number[];
+  sizes?: string;
+  class?: string;
+}
+
+const {
+  src,
+  alt,
+  caption,
+  number,
+  zoom = false,
+  eager = false,
+  widths = [480, 800, 1200],
+  sizes = '(min-width: 1100px) 560px, (min-width: 720px) 50vw, 100vw',
+  class: className = '',
+} = Astro.props;
+
+const usableWidths = widths.filter((w) => w <= src.width);
+if (usableWidths.length === 0) usableWidths.push(src.width);
+const full = zoom ? await getImage({ src, width: Math.min(src.width, 1920), format: 'webp' }) : null;
+const label = number ? `Figure ${number}. ` : '';
+---
+
+<figure class:list={['figure', className]}>
+  <div class="figure__frame">
+    {
+      zoom && full ? (
+        <a class="figure__zoom" href={full.src} data-lightbox data-caption={`${label}${caption}`} data-alt={alt}>
+          <Image src={src} alt={alt} widths={usableWidths} sizes={sizes} loading={eager ? 'eager' : 'lazy'} />
+          <span class="visually-hidden">(open larger view)</span>
+        </a>
+      ) : (
+        <Image
+          src={src}
+          alt={alt}
+          widths={usableWidths}
+          sizes={sizes}
+          loading={eager ? 'eager' : 'lazy'}
+          fetchpriority={eager ? 'high' : 'auto'}
+        />
+      )
+    }
+  </div>
+  <figcaption class="figure__caption">
+    {number && <span class="figure__number mono">Figure {number}.</span>}
+    {caption}
+  </figcaption>
+</figure>

@@ -1,0 +1,108 @@
+---
+/**
+ * Accessible lightbox built on the native <dialog> element.
+ * - showModal() makes the rest of the page inert; Tab is additionally kept inside the dialog.
+ * - Escape closes (native), ← / → navigate, focus returns to the figure that opened it.
+ * - Without JS, figure links open the image directly.
+ */
+---
+
+<dialog class="lightbox" aria-labelledby="lightbox-caption">
+  <div class="lightbox__inner">
+    <div class="lightbox__toolbar">
+      <p class="lightbox__counter mono" aria-live="polite"></p>
+      <button type="button" class="lightbox__btn" data-lb-close aria-label="Close figure">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"
+          ><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg
+        >
+      </button>
+    </div>
+    <figure class="lightbox__figure">
+      <div class="lightbox__frame">
+        <img alt="" decoding="async" />
+      </div>
+      <figcaption id="lightbox-caption" class="figure__caption"></figcaption>
+    </figure>
+    <div class="lightbox__nav">
+      <button type="button" class="lightbox__btn" data-lb-prev aria-label="Previous figure">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"
+          ><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg
+        >
+      </button>
+      <button type="button" class="lightbox__btn" data-lb-next aria-label="Next figure">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"
+          ><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg
+        >
+      </button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('dialog.lightbox');
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('a[data-lightbox]'));
+
+  if (dialog && links.length && typeof dialog.showModal === 'function') {
+    const img = dialog.querySelector('img')!;
+    const caption = dialog.querySelector('figcaption')!;
+    const counter = dialog.querySelector('.lightbox__counter')!;
+    const nav = dialog.querySelector<HTMLElement>('.lightbox__nav')!;
+    let current = 0;
+    let opener: HTMLElement | null = null;
+
+    nav.hidden = links.length < 2;
+
+    const show = (index: number) => {
+      current = (index + links.length) % links.length;
+      const link = links[current];
+      img.src = link.href;
+      img.alt = link.dataset.alt ?? '';
+      caption.textContent = link.dataset.caption ?? '';
+      counter.textContent = `${current + 1} / ${links.length}`;
+    };
+
+    links.forEach((link, i) => {
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        opener = link;
+        show(i);
+        dialog.showModal();
+        dialog.querySelector<HTMLButtonElement>('[data-lb-close]')!.focus();
+      });
+    });
+
+    dialog.querySelector('[data-lb-close]')!.addEventListener('click', () => dialog.close());
+    dialog.querySelector('[data-lb-prev]')!.addEventListener('click', () => show(current - 1));
+    dialog.querySelector('[data-lb-next]')!.addEventListener('click', () => show(current + 1));
+
+    // Click on the backdrop (outside the inner panel) closes.
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft' && links.length > 1) show(current - 1);
+      if (event.key === 'ArrowRight' && links.length > 1) show(current + 1);
+      if (event.key === 'Tab') {
+        // Focus trap: cycle through the dialog's visible buttons.
+        const focusables = Array.from(dialog.querySelectorAll<HTMLButtonElement>('button')).filter(
+          (b) => !b.closest('[hidden]'),
+        );
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    });
+
+    dialog.addEventListener('close', () => {
+      img.removeAttribute('src');
+      opener?.focus();
+    });
+  }
+</script>

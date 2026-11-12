@@ -1,0 +1,320 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import StatCard from '../components/StatCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Figure from '../components/Figure.astro';
+import Timeline from '../components/Timeline.astro';
+import { CATEGORIES } from '../content.config';
+import { SITE, url } from '../lib/url';
+import heroFigure from '../assets/projects/fsae-aerodynamics/fsae_stream.jpeg';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+
+// Optional profile photo: drop src/assets/profile.jpg (or .jpeg/.png/.webp) and it appears in Contact.
+const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/profile.{jpg,jpeg,png,webp}', { eager: true });
+const photo = Object.values(photos)[0]?.default;
+
+const keyStats = [
+  { value: `${projects.length}`, label: 'engineering projects, academic and industrial' },
+  { value: '3', label: 'solvers: ANSYS Fluent, Abaqus, MATLAB' },
+  { value: '16', label: 'CFD runs in one parametric aircraft study' },
+  { value: '1', label: 'industrial monitoring tool delivered at Renault Group' },
+];
+
+const filters = ['All', ...CATEGORIES].map((label) => ({
+  label,
+  count: label === 'All' ? projects.length : projects.filter((p) => p.data.category === label).length,
+}));
+
+const skills = [
+  {
+    title: 'Simulation',
+    groups: [
+      { label: 'Solvers', items: ['ANSYS Fluent', 'Abaqus Standard / Explicit', 'MATLAB'] },
+      {
+        label: 'Methods',
+        items: ['RANS, k-ω SST, Spalart-Allmaras', 'Modal analysis', 'Ductile damage & element deletion', 'Mesh & domain sensitivity studies'],
+      },
+    ],
+  },
+  { title: 'CAD', groups: [{ label: 'Tools', items: ['CATIA V5', 'SolidWorks', 'Fusion 360'] }] },
+  {
+    title: 'Code & data',
+    groups: [
+      { label: 'Languages', items: ['Python', 'C#', 'SQL'] },
+      { label: 'Web & ML', items: ['FastAPI', 'React', 'Random Forest, XGBoost'] },
+    ],
+  },
+  {
+    title: 'Lab & materials',
+    groups: [{ label: 'Techniques', items: ['Tensile testing', 'Digital microscopy', 'Thermal analysis (TGA / DSC)'] }],
+  },
+];
+
+const timeline = [
+  {
+    date: 'Sep 2026 – Feb 2027',
+    title: 'Industrial innovation project with Thales Alenia Space',
+    place: 'ESILV PI² programme',
+    detail: 'Microstructure and damage mechanisms of aged glass/epoxy PCB composites.',
+  },
+  {
+    date: 'Apr – Jul 2026',
+    title: 'Engineering intern, stamping department',
+    place: 'Renault Group, Tangier plant, Morocco',
+    detail: 'Built a real-time press force monitoring tool, delivered to one production line.',
+  },
+  {
+    date: 'Sep 2025 – 2027',
+    title: "Double Master's in Aerospace & Defence",
+    place: 'ESILV Paris',
+    detail: 'Propulsion, CFD, orbital mechanics, signal processing, unmanned flight, embedded electronics.',
+  },
+  {
+    date: 'Feb – Jul 2025',
+    title: 'Academic exchange',
+    place: 'Hanyang University, Seoul · College of Mechanical Engineering',
+  },
+  {
+    date: '2022 – 2027',
+    title: "Master's in Engineering, Mechanical Engineering & Numerical Modelling",
+    place: 'ESILV Paris (Diplôme d’ingénieur)',
+    detail: 'Structural, fluid and fracture mechanics; numerical modelling and multiphysics simulation.',
+  },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Mathis Charlo',
+  url: new URL(url(''), Astro.site).href,
+  jobTitle: 'Engineering student, Mechanical Engineering & Numerical Modelling',
+  email: `mailto:${SITE.email}`,
+  sameAs: [SITE.linkedin],
+  address: { '@type': 'PostalAddress', addressRegion: 'Île-de-France', addressCountry: 'FR' },
+  alumniOf: [
+    { '@type': 'CollegeOrUniversity', name: 'ESILV (École Supérieure d’Ingénieurs Léonard de Vinci)' },
+    { '@type': 'CollegeOrUniversity', name: 'Hanyang University' },
+  ],
+  knowsAbout: ['Computational fluid dynamics', 'Finite element analysis', 'ANSYS Fluent', 'Abaqus', 'MATLAB', 'Composite materials', 'Fracture mechanics'],
+  knowsLanguage: ['fr', 'en', 'es'],
+};
+---
+
+<BaseLayout>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonLd)} />
+
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="container hero__grid">
+      <div>
+        <p class="hero__eyebrow mono">
+          <span>Simulation · Aerospace &amp; Defence</span>
+          <span aria-hidden="true">/</span>
+          <span>Paris region, France</span>
+        </p>
+        <h1 id="hero-title">Mathis Charlo</h1>
+        <p class="hero__title">
+          Mechanical Engineering &amp; Numerical Modelling, Double Master’s in Aerospace &amp; Defence, ESILV Paris,
+          class of 2027
+        </p>
+        <p class="hero__lede">
+          I build CFD and finite-element models, check them against theory and test data, and turn the results into
+          engineering decisions, from race-car aerodynamics to composite plates and fracture.
+        </p>
+        <p class="hero__availability">Available for a VIE or full-time position from February 2027</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="#projects">View projects</a>
+          <a class="btn btn--ghost" href={url(SITE.cv)} download>
+            <svg viewBox="0 0 24 24" aria-hidden="true"
+              ><path
+                d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 19h14"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"></path></svg
+            >
+            Download CV <span class="mono muted">PDF</span>
+          </a>
+        </div>
+      </div>
+      <Figure
+        src={heroFigure}
+        alt="Velocity-coloured pathlines flowing over a simplified Formula SAE car in ANSYS Fluent, with slower air in the wake behind the rear wing and wheels"
+        caption="Velocity pathlines around a Formula SAE car, ANSYS Fluent, RANS k-ω SST. From my aerodynamics project."
+        eager
+        widths={[560, 800, 1148]}
+        sizes="(min-width: 1220px) 600px, (min-width: 992px) 52vw, 100vw"
+      />
+    </div>
+  </section>
+
+  <!-- Key figures -->
+  <section class="container" aria-label="Key figures">
+    <ul class="stat-grid">
+      {
+        keyStats.map((s) => (
+          <li>
+            <StatCard value={s.value} label={s.label} />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- Projects -->
+  <section class="section" aria-labelledby="projects">
+    <div class="container">
+      <SectionHeading
+        id="projects"
+        index="01 / Projects"
+        title="Projects"
+        intro="CFD, structural and materials studies, a space link and an industrial tool. Each page details the method, the numbers and the figures."
+      />
+
+      <div class="filter" role="group" aria-label="Filter projects by category" data-filter hidden>
+        <span class="filter__label">Filter</span>
+        {
+          filters.map((f, i) => (
+            <button type="button" class="filter__btn" data-category={f.label} aria-pressed={i === 0 ? 'true' : 'false'}>
+              {f.label}
+              <span class="filter__count" aria-hidden="true">
+                {f.count}
+              </span>
+            </button>
+          ))
+        }
+      </div>
+      <p class="visually-hidden" aria-live="polite" data-filter-status></p>
+
+      <ul class="project-grid" data-projects>
+        {
+          projects.map((p) => (
+            <li data-category={p.data.category} class="reveal">
+              <ProjectCard project={p} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section class="section" aria-labelledby="skills">
+    <div class="container">
+      <SectionHeading id="skills" index="02 / Skills" title="Skills" />
+      <div class="skills">
+        {
+          skills.map((block) => (
+            <section class="skill-block reveal" aria-labelledby={`skill-${block.title.replace(/\W+/g, '-').toLowerCase()}`}>
+              <h3 id={`skill-${block.title.replace(/\W+/g, '-').toLowerCase()}`}>{block.title}</h3>
+              {block.groups.map((g) => (
+                <>
+                  <p class="skill-block__label">{g.label}</p>
+                  <ul>
+                    {g.items.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                </>
+              ))}
+            </section>
+          ))
+        }
+      </div>
+      <dl class="skills-extra">
+        <div>
+          <dt>Languages</dt>
+          <dd>French (native) · English B2+ (TOEFL ITP 577) · Spanish B1+</dd>
+        </div>
+        <div>
+          <dt>Coursework</dt>
+          <dd>Propulsion · CFD · Orbital mechanics · Signal processing · Unmanned flight · Embedded electronics</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- Background -->
+  <section class="section" aria-labelledby="background">
+    <div class="container">
+      <SectionHeading id="background" index="03 / Background" title="Background" />
+      <Timeline items={timeline} />
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="section" aria-labelledby="contact">
+    <div class="container contact">
+      <div>
+        {
+          photo && (
+            <img
+              class="contact__photo"
+              src={photo.src}
+              width="112"
+              height="112"
+              alt="Portrait of Mathis Charlo"
+              loading="lazy"
+            />
+          )
+        }
+        <SectionHeading
+          id="contact"
+          index="04 / Contact"
+          title="Let’s talk"
+          intro="I am looking for a VIE or a full-time position in aerospace, space or defence, in simulation or mechanical engineering, from February 2027."
+        />
+        <div class="hero__actions">
+          <a class="btn btn--primary" href={`mailto:${SITE.email}`}>Email me</a>
+          <a class="btn btn--ghost" href={url(SITE.cv)} download>Download CV <span class="mono muted">PDF</span></a>
+        </div>
+      </div>
+      <dl class="contact__list">
+        <div class="contact__row">
+          <dt>Email</dt>
+          <dd><a href={`mailto:${SITE.email}`}>{SITE.email}</a></dd>
+        </div>
+        <div class="contact__row">
+          <dt>LinkedIn</dt>
+          <dd><a href={SITE.linkedin} rel="me noopener" target="_blank">{SITE.linkedinLabel}</a></dd>
+        </div>
+        <div class="contact__row">
+          <dt>Location</dt>
+          <dd>Paris region, France. Open to international mobility.</dd>
+        </div>
+        <div class="contact__row">
+          <dt>Availability</dt>
+          <dd>From February 2027 · VIE or full-time</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  // Category filter. Without JS the buttons stay hidden and every project is listed.
+  const group = document.querySelector<HTMLElement>('[data-filter]');
+  const items = Array.from(document.querySelectorAll<HTMLElement>('[data-projects] > li'));
+  const status = document.querySelector<HTMLElement>('[data-filter-status]');
+  if (group && items.length) {
+    group.hidden = false;
+    const buttons = Array.from(group.querySelectorAll<HTMLButtonElement>('button'));
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const category = button.dataset.category;
+        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+        let shown = 0;
+        items.forEach((item) => {
+          const match = category === 'All' || item.dataset.category === category;
+          item.hidden = !match;
+          if (match) shown += 1;
+        });
+        if (status) status.textContent = `${shown} project${shown > 1 ? 's' : ''} shown: ${category}`;
+      });
+    });
+  }
+</script>

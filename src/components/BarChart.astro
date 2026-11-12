@@ -1,0 +1,82 @@
+---
+/**
+ * Horizontal bar chart in plain HTML/CSS (no JS, no chart library).
+ * Text stays at real font size on mobile, unlike a scaled SVG, and the markup is a list
+ * that screen readers announce as "label: value unit".
+ * One or two series (grouped bars). Values must be >= 0.
+ */
+interface Props {
+  title: string;
+  caption: string;
+  unit: string;
+  series: string[];
+  data: { label: string; values: number[] }[];
+  number?: number;
+}
+const { title, caption, unit, series, data, number } = Astro.props;
+
+const max = Math.max(...data.flatMap((d) => d.values));
+// Round the axis up to a "nice" value so the gridlines land on readable numbers.
+const magnitude = 10 ** Math.floor(Math.log10(max));
+const niceMax = [1, 2, 2.5, 5, 10].map((m) => m * magnitude).find((v) => v >= max) ?? max;
+const ticks = [0, 0.25, 0.5, 0.75, 1].map((t) => +(t * niceMax).toPrecision(3));
+const fmt = (v: number) => (Number.isInteger(v) ? v.toString() : v.toFixed(1));
+const spaced = unit.startsWith('%') ? '' : ' ';
+---
+
+<figure class="chart">
+  <div class="chart__panel">
+    <div class="chart__head">
+      <p class="chart__title">{title}</p>
+      {
+        series.length > 1 && (
+          <ul class="chart__legend" aria-hidden="true">
+            {series.map((s, i) => (
+              <li>
+                <span class={`chart__swatch chart__swatch--${i}`} />
+                {s}
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+    <div class="chart__plot">
+      <div class="chart__grid" aria-hidden="true">
+        {ticks.map((t, i) => (
+          <span style={`--x:${(t / niceMax) * 100}%`} data-tick={i === ticks.length - 1 ? `${fmt(t)}${spaced}${unit}` : fmt(t)} />
+        ))}
+      </div>
+      <ul class="chart__rows">
+        {
+          data.map((row) => (
+            <li class="chart__row">
+              <span class="chart__label">{row.label}</span>
+              <span class="chart__bars">
+                {row.values.map((v, i) => (
+                  <span class="chart__bar-line">
+                    <span
+                      class={`chart__bar chart__bar--${i}`}
+                      style={`--w:${(v / niceMax) * 100}%`}
+                      title={`${row.label}, ${series[i]}: ${fmt(v)}${spaced}${unit}`}
+                    />
+                    <span class="chart__value mono">
+                      {series.length > 1 && <span class="visually-hidden">{series[i]}: </span>}
+                      {unit.startsWith('%') ? `+${fmt(v)}` : fmt(v)}
+                      {spaced}
+                      {unit}
+                    </span>
+                  </span>
+                ))}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+  <figcaption class="chart__caption">
+    {number && <span class="figure__number mono">Figure {number}.</span>}
+    {caption}
+  </figcaption>
+</figure>

@@ -1,0 +1,16 @@
+---
+import { SITE } from '../lib/url';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <p>© {year} Mathis Charlo</p>
+    <ul class="site-footer__links">
+      <li><a href={`mailto:${SITE.email}`}>Email</a></li>
+      <li><a href={SITE.linkedin} rel="me noopener" target="_blank">LinkedIn</a></li>
+      <li><a href="https://github.com/mathischarlo/mathischarlo.github.io">Source</a></li>
+    </ul>
+    <p class="muted">Built with Astro. Simulation and test figures come from my own project work.</p>
+  </div>
+</footer>
