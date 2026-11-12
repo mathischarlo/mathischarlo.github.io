@@ -610,6 +610,20 @@
     gap: var(--space-3xl);
   }
 }
+.hero__portrait {
+  width: 100%;
+  max-width: 22rem;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: 50% 45%; /* keeps the face and the pointed-at map in frame */
+  border-radius: var(--radius-l);
+}
+@media (min-width: 62rem) {
+  .hero__portrait {
+    max-width: 28rem;
+    justify-self: end;
+  }
+}
 .hero__eyebrow {
   display: flex;
   flex-wrap: wrap;

@@ -4,11 +4,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import StatCard from '../components/StatCard.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import Figure from '../components/Figure.astro';
 import Timeline from '../components/Timeline.astro';
 import { CATEGORIES } from '../content.config';
 import { SITE, url } from '../lib/url';
-import heroFigure from '../assets/projects/fsae-aerodynamics/fsae_stream.jpeg';
+import { Image } from 'astro:assets';
+import portrait from '../assets/portrait.jpg';
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
 
@@ -149,13 +149,14 @@ const jsonLd = {
           </a>
         </div>
       </div>
-      <Figure
-        src={heroFigure}
-        alt="Velocity-coloured pathlines flowing over a simplified Formula SAE car in ANSYS Fluent, with slower air in the wake behind the rear wing and wheels"
-        caption="Velocity pathlines around a Formula SAE car, ANSYS Fluent, RANS k-ω SST. From my aerodynamics project."
-        eager
-        widths={[560, 800, 1148]}
-        sizes="(min-width: 1220px) 600px, (min-width: 992px) 52vw, 100vw"
+      <Image
+        class="hero__portrait"
+        src={portrait}
+        alt="Mathis Charlo smiling and pointing at Tangier on the Renault Group world map of plants, during his internship"
+        widths={[360, 540, 720, 900]}
+        sizes="(min-width: 992px) 448px, (min-width: 480px) 352px, calc(100vw - 2rem)"
+        loading="eager"
+        fetchpriority="high"
       />
     </div>
   </section>
