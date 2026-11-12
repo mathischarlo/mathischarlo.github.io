@@ -16,10 +16,12 @@ interface Props {
 const { title, caption, unit, series, data, number } = Astro.props;
 
 const max = Math.max(...data.flatMap((d) => d.values));
-// Round the axis up to a "nice" value so the gridlines land on readable numbers.
-const magnitude = 10 ** Math.floor(Math.log10(max));
-const niceMax = [1, 2, 2.5, 5, 10].map((m) => m * magnitude).find((v) => v >= max) ?? max;
-const ticks = [0, 0.25, 0.5, 0.75, 1].map((t) => +(t * niceMax).toPrecision(3));
+// Pick a round tick step (1, 2, 2.5 or 5 × 10^n) for about 4 intervals, so gridlines land on readable numbers.
+const rough = max / 4;
+const magnitude = 10 ** Math.floor(Math.log10(rough));
+const step = [1, 2, 2.5, 5, 10].map((m) => m * magnitude).find((v) => v >= rough) ?? rough;
+const niceMax = step * Math.ceil(max / step);
+const ticks = Array.from({ length: Math.round(niceMax / step) + 1 }, (_, i) => +(i * step).toPrecision(3));
 const fmt = (v: number) => (Number.isInteger(v) ? v.toString() : v.toFixed(1));
 const spaced = unit.startsWith('%') ? '' : ' ';
 ---

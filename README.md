@@ -94,7 +94,6 @@ Ces TODO sont des commentaires dans les fichiers ; aucun n'est visible sur le si
 | --- | --- |
 | `src/assets/profile.jpg` | Ajouter ta photo pro (je ne peux pas récupérer celle de LinkedIn). |
 | `renault-press-monitoring.md` | Ajouter le fichier officiel du logo Renault Group dans `src/assets/projects/renault-press-monitoring/`, puis décommenter `logo` et `logoAlt`. |
-| `uhf-satellite-link.md` | Bilan de liaison (tableau en dB, marge), 3 ou 4 chiffres clés, une figure MATLAB, hypothèses (orbite, antennes, fréquence), taille de l'équipe. |
 | `thales-pcb-composites.md` | Taille de l'équipe ; premiers résultats TGA/DSC et images de microscopie, quand Thales Alenia Space les autorise. |
 | `s355-tensile-fracture.md` | Période réelle et taille de l'équipe. |
 | `cylinder-cfd-validation.md`, `composite-plate-modal.md`, `honeycomb-fracture-toughness.md` | Période réelle (le site affiche « ESILV coursework » en attendant). |
