@@ -55,9 +55,9 @@ const skills = [
 
 const timeline = [
   {
-    date: 'From Feb 2027',
+    date: 'Feb – Dec 2027',
     title: 'End-of-studies internship, then master’s thesis semester',
-    place: 'Final semesters of the ESILV engineering degree and the Aerospace & Defence master’s',
+    place: 'Internship in aerospace from February 2027: currently looking',
   },
   {
     date: 'Sep 2026 – Feb 2027',
@@ -72,7 +72,7 @@ const timeline = [
     detail: 'Built a real-time press force monitoring tool, delivered to one production line.',
   },
   {
-    date: 'Sep 2025 – 2027',
+    date: 'Sep 2025 – Dec 2027',
     title: "Double Master's in Aerospace & Defence",
     place: 'ESILV Paris',
     detail: 'Propulsion, CFD, orbital mechanics, signal processing, unmanned flight, embedded electronics.',
@@ -83,7 +83,7 @@ const timeline = [
     place: 'Hanyang University, Seoul · College of Mechanical Engineering',
   },
   {
-    date: '2022 – 2027',
+    date: '2022 – Aug 2027',
     title: "Master's in Engineering, Mechanical Engineering & Numerical Modelling",
     place: 'ESILV Paris (Diplôme d’ingénieur)',
     detail: 'Structural, fluid and fracture mechanics; numerical modelling and multiphysics simulation.',
@@ -129,7 +129,10 @@ const jsonLd = {
           I build CFD and finite-element models, check them against theory and test data, and turn the results into
           engineering decisions, from race-car aerodynamics to composite plates and fracture.
         </p>
-        <p class="hero__availability">Open to VIE and full-time roles after my master’s</p>
+        <ul class="hero__availability-list">
+          <li class="hero__availability">Looking for an aerospace internship from February 2027</li>
+          <li class="hero__availability hero__availability--later">VIE or full-time after December 2027</li>
+        </ul>
         <div class="hero__actions">
           <a class="btn btn--primary" href="#projects">View projects</a>
           <a class="btn btn--ghost" href={url(SITE.cv)} download>
@@ -271,7 +274,7 @@ const jsonLd = {
           id="contact"
           index="04 / Contact"
           title="Let’s talk"
-          intro="From February 2027 I am on my end-of-studies internship, followed by my thesis semester for the Aerospace &amp; Defence master’s. After that, I am looking for a VIE or a full-time position in aerospace, space or defence, in simulation or mechanical engineering."
+          intro="I am looking for an end-of-studies internship in aerospace from February 2027, in simulation or mechanical engineering. I complete my engineering degree in August 2027 and my Aerospace & Defence master’s in December 2027; after that, I am looking for a VIE or a full-time position in aerospace, space or defence."
         />
         <div class="hero__actions">
           <a class="btn btn--primary" href={`mailto:${SITE.email}`}>Email me</a>
@@ -292,8 +295,12 @@ const jsonLd = {
           <dd>Paris region, France. Open to international mobility.</dd>
         </div>
         <div class="contact__row">
-          <dt>Availability</dt>
-          <dd>VIE or full-time, after my master’s. End-of-studies internship from February 2027, then thesis semester.</dd>
+          <dt>Internship</dt>
+          <dd>End-of-studies internship in aerospace, from February 2027</dd>
+        </div>
+        <div class="contact__row">
+          <dt>After graduation</dt>
+          <dd>VIE or full-time, after December 2027</dd>
         </div>
       </dl>
     </div>

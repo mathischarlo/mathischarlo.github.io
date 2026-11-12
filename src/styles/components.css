@@ -635,6 +635,14 @@
   color: var(--text-muted);
   font-size: var(--step-0);
 }
+.hero__availability-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-top: var(--space-l);
+  padding: 0;
+  list-style: none;
+}
 .hero__availability {
   display: inline-flex;
   align-items: center;
@@ -652,6 +660,17 @@
   border-radius: 50%;
   background: var(--accent);
   flex: none;
+}
+.hero__availability-list .hero__availability {
+  margin-top: 0;
+}
+/* Second, later availability: hollow dot so the internship reads as the current priority */
+.hero__availability--later {
+  color: var(--text-muted);
+}
+.hero__availability--later::before {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--text-muted);
 }
 .hero__actions {
   display: flex;

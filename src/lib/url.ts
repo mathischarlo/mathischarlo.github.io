@@ -9,7 +9,7 @@ export const SITE = {
   name: 'Mathis Charlo',
   title: 'Mathis Charlo | Mechanical Engineering & Numerical Modelling',
   description:
-    "Portfolio of Mathis Charlo, engineering student at ESILV Paris (Mechanical Engineering & Numerical Modelling, Double Master's in Aerospace & Defence). A selection of CFD, FEA, materials and space projects. Open to VIE and full-time roles after my master's.",
+    "Portfolio of Mathis Charlo, engineering student at ESILV Paris (Mechanical Engineering & Numerical Modelling, Double Master's in Aerospace & Defence). A selection of CFD, FEA, materials and space projects. Looking for an end-of-studies internship in aerospace from February 2027, then a VIE or full-time role after December 2027.",
   email: 'mathis.charlo@edu.devinci.fr',
   linkedin: 'https://www.linkedin.com/in/mathischarlo',
   linkedinLabel: 'linkedin.com/in/mathischarlo',
