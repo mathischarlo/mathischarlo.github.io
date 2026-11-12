@@ -17,7 +17,7 @@ const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/profile.{
 const photo = Object.values(photos)[0]?.default;
 
 const keyStats = [
-  { value: `${projects.length}`, label: 'engineering projects, academic and industrial' },
+  { value: `${projects.length}`, label: 'projects presented here, a selection of my academic and personal work' },
   { value: '3', label: 'solvers: ANSYS Fluent, Abaqus, MATLAB' },
   { value: '16', label: 'CFD runs in one parametric aircraft study' },
   { value: '1', label: 'industrial monitoring tool delivered at Renault Group' },
@@ -54,6 +54,11 @@ const skills = [
 ];
 
 const timeline = [
+  {
+    date: 'From Feb 2027',
+    title: 'End-of-studies internship, then master’s thesis semester',
+    place: 'Final semesters of the ESILV engineering degree and the Aerospace & Defence master’s',
+  },
   {
     date: 'Sep 2026 – Feb 2027',
     title: 'Industrial innovation project with Thales Alenia Space',
@@ -124,7 +129,7 @@ const jsonLd = {
           I build CFD and finite-element models, check them against theory and test data, and turn the results into
           engineering decisions, from race-car aerodynamics to composite plates and fracture.
         </p>
-        <p class="hero__availability">Available for a VIE or full-time position from February 2027</p>
+        <p class="hero__availability">Open to VIE and full-time roles after my master’s</p>
         <div class="hero__actions">
           <a class="btn btn--primary" href="#projects">View projects</a>
           <a class="btn btn--ghost" href={url(SITE.cv)} download>
@@ -172,7 +177,7 @@ const jsonLd = {
         id="projects"
         index="01 / Projects"
         title="Projects"
-        intro="CFD, structural and materials studies, a space link and an industrial tool. Each page details the method, the numbers and the figures."
+        intro={`Here are ${projects.length} of my academic and personal projects: CFD, structures and materials, space and industry. Each page details the method, the numbers and the figures.`}
       />
 
       <div class="filter" role="group" aria-label="Filter projects by category" data-filter hidden>
@@ -266,7 +271,7 @@ const jsonLd = {
           id="contact"
           index="04 / Contact"
           title="Let’s talk"
-          intro="I am looking for a VIE or a full-time position in aerospace, space or defence, in simulation or mechanical engineering, from February 2027."
+          intro="From February 2027 I am on my end-of-studies internship, followed by my thesis semester for the Aerospace &amp; Defence master’s. After that, I am looking for a VIE or a full-time position in aerospace, space or defence, in simulation or mechanical engineering."
         />
         <div class="hero__actions">
           <a class="btn btn--primary" href={`mailto:${SITE.email}`}>Email me</a>
@@ -288,7 +293,7 @@ const jsonLd = {
         </div>
         <div class="contact__row">
           <dt>Availability</dt>
-          <dd>From February 2027 · VIE or full-time</dd>
+          <dd>VIE or full-time, after my master’s. End-of-studies internship from February 2027, then thesis semester.</dd>
         </div>
       </dl>
     </div>
